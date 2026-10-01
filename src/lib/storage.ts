@@ -37,8 +37,26 @@ export const getComplaintById = (id: string): Complaint | undefined => {
 
 export const saveComplaints = (complaints: Complaint[]): void => {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(STORAGE_KEYS.COMPLAINTS, JSON.stringify(complaints));
-  notifyListeners();
+  try {
+    localStorage.setItem(STORAGE_KEYS.COMPLAINTS, JSON.stringify(complaints));
+    notifyListeners();
+  } catch (error) {
+    console.warn('localStorage save warning (quota or restricted):', error);
+    // If quota exceeded due to heavy base64 image data, strip image strings from older complaints and retry
+    try {
+      const sanitized = complaints.map((c, idx) => {
+        if (idx > 0 && c.image && c.image.length > 5000) {
+          return { ...c, image: undefined };
+        }
+        return c;
+      });
+      localStorage.setItem(STORAGE_KEYS.COMPLAINTS, JSON.stringify(sanitized));
+      notifyListeners();
+    } catch {
+      // Fallback: notify listeners anyway so local React state stays active
+      notifyListeners();
+    }
+  }
 };
 
 export type NewComplaintInput = Omit<Complaint, 'id' | 'reportedDate' | 'lastUpdated' | 'status' | 'timeline' | 'updates' | 'coordinates'> & {
@@ -303,7 +321,11 @@ export const addNotification = (item: Omit<NotificationItem, 'id' | 'timestamp' 
     read: false,
   };
   const updated = [newNotif, ...notifications];
-  localStorage.setItem(STORAGE_KEYS.NOTIFICATIONS, JSON.stringify(updated));
+  try {
+    localStorage.setItem(STORAGE_KEYS.NOTIFICATIONS, JSON.stringify(updated.slice(0, 30)));
+  } catch (err) {
+    console.warn('Notification storage warning:', err);
+  }
   notifyListeners();
 };
 
