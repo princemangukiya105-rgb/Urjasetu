@@ -86,11 +86,10 @@ export default function CitizenPortalPage() {
       <div className="flex items-center gap-2 border-b border-slate-200 pb-2 overflow-x-auto text-xs font-bold">
         <button
           onClick={() => setActiveTab('dashboard')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${
-            activeTab === 'dashboard'
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${activeTab === 'dashboard'
               ? 'bg-blue-600 text-white shadow-xs'
               : 'text-slate-600 hover:bg-slate-100'
-          }`}
+            }`}
         >
           <LayoutDashboard className="w-4 h-4" />
           <span>Dashboard Overview</span>
@@ -98,11 +97,10 @@ export default function CitizenPortalPage() {
 
         <button
           onClick={() => setActiveTab('complaints')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${
-            activeTab === 'complaints'
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${activeTab === 'complaints'
               ? 'bg-blue-600 text-white shadow-xs'
               : 'text-slate-600 hover:bg-slate-100'
-          }`}
+            }`}
         >
           <FileText className="w-4 h-4" />
           <span>My Complaints ({total})</span>
@@ -110,11 +108,10 @@ export default function CitizenPortalPage() {
 
         <button
           onClick={() => setActiveTab('notifications')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${
-            activeTab === 'notifications'
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${activeTab === 'notifications'
               ? 'bg-blue-600 text-white shadow-xs'
               : 'text-slate-600 hover:bg-slate-100'
-          }`}
+            }`}
         >
           <Bell className="w-4 h-4" />
           <span>Updates & Notifications ({notifications.filter((n) => !n.read).length})</span>
