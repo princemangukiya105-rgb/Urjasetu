@@ -57,7 +57,7 @@ export default function CitizenPortalPage() {
             <span className="text-xs text-slate-300 font-mono">Mira-Bhayandar Zone</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            Welcome back,Prince Mangukiya
+            Welcome back, Prince Mangukiya
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
             Track your logged electrical infrastructure issues, submit new reports, and view official administration updates.
