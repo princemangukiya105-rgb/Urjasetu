@@ -49,9 +49,6 @@ export const Navbar: React.FC = () => {
                 <span className="font-extrabold text-xl text-slate-900 tracking-tight">
                   Urja<span className="text-blue-600">Setu</span>
                 </span>
-                <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider">
-                  Idea Lab
-                </span>
               </div>
               <p className="text-[10px] text-slate-500 hidden sm:block -mt-1 font-medium">
                 Urban Energy Infrastructure Platform

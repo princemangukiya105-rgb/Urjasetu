@@ -16,6 +16,7 @@ import {
   Sparkles,
   Camera,
   X,
+  MessageSquare,
 } from 'lucide-react';
 import { IssueType, Priority } from '@/types';
 import { addComplaint } from '@/lib/storage';
@@ -96,9 +97,11 @@ export default function ReportPage() {
   const [priority, setPriority] = useState<Priority>('High');
   const [citizenName, setCitizenName] = useState('');
   const [citizenPhone, setCitizenPhone] = useState('');
+  const [phoneError, setPhoneError] = useState('');
 
   // Submission State
   const [submittedId, setSubmittedId] = useState<string | null>(null);
+  const [generatedWaUrl, setGeneratedWaUrl] = useState<string | null>(null);
 
   // Auto-set priority suggestion based on issue type selection
   const handleTypeSelect = (opt: typeof ISSUE_OPTIONS[0]) => {
@@ -152,9 +155,25 @@ export default function ReportPage() {
     }
   };
 
-  // Submit Handler
+  // Validate step 3 before proceeding
+  const handleNextFromStep3 = () => {
+    if (!citizenPhone.trim()) {
+      setPhoneError('Phone number is compulsory for WhatsApp updates');
+      return;
+    }
+    setPhoneError('');
+    setStep(4);
+  };
+
+  // Submit Handler with Automatic WhatsApp Dispatch
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!citizenPhone.trim()) {
+      setPhoneError('Phone number is compulsory for WhatsApp updates');
+      setStep(3);
+      return;
+    }
+
     try {
       const newComplaint = addComplaint({
         issueType: selectedType,
@@ -166,14 +185,30 @@ export default function ReportPage() {
         image: imagePreview || undefined,
         priority,
         reportedBy: {
-          name: citizenName || 'Anonymous Citizen',
-          phone: citizenPhone || '+91 98000 00000',
+          name: citizenName || 'Citizen',
+          phone: citizenPhone,
           email: 'citizen@example.com',
         },
       });
 
       setSubmittedId(newComplaint.id);
+
+      // WhatsApp URL Construction
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      const trackingUrl = `${origin}/track/${newComplaint.id}`;
+      let cleanPhone = citizenPhone.replace(/[^0-9]/g, '');
+      if (cleanPhone.length === 10) {
+        cleanPhone = '91' + cleanPhone;
+      }
+
+      const waText = `Hello ${citizenName || 'Citizen'},\n\nYour public issue report has been successfully registered on UrjaSetu.\n\n📌 *Complaint ID:* ${newComplaint.id}\n⚡ *Issue:* ${selectedType}\n📍 *Location:* ${street ? street + ', ' : ''}${area}\n\n🔍 *Track real-time updates here:*\n${trackingUrl}`;
+
+      const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(waText)}`;
+      setGeneratedWaUrl(waUrl);
+
+      // Automatically open WhatsApp in new window/tab
       if (typeof window !== 'undefined') {
+        window.open(waUrl, '_blank');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     } catch (err) {
@@ -205,6 +240,7 @@ export default function ReportPage() {
           </p>
         </div>
 
+        {/* Complaint ID Card */}
         <div className="bg-slate-900 text-white rounded-2xl p-6 md:p-8 max-w-md mx-auto space-y-3 shadow-xl">
           <span className="text-xs text-slate-400 font-mono uppercase tracking-wider">
             Your Unique Complaint ID
@@ -216,6 +252,28 @@ export default function ReportPage() {
             Save this Reference ID to track status updates on the vertical timeline.
           </p>
         </div>
+
+        {/* WhatsApp Auto-Send Notification Box */}
+        {generatedWaUrl && (
+          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 max-w-md mx-auto space-y-3 shadow-sm text-emerald-950">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-600 text-white text-xs font-bold rounded-full">
+              <MessageSquare className="w-3.5 h-3.5 fill-white" />
+              <span>WhatsApp Message Triggered</span>
+            </div>
+            <p className="text-xs font-medium text-emerald-900 leading-relaxed">
+              The Complaint ID <span className="font-mono font-bold text-emerald-950">{submittedId}</span> and direct tracking link have been dispatched to WhatsApp on <strong className="font-mono">{citizenPhone}</strong>.
+            </p>
+            <a
+              href={generatedWaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs shadow-md shadow-emerald-600/20 transition-all"
+            >
+              <MessageSquare className="w-4 h-4 fill-white" />
+              <span>Open / Resend WhatsApp Message</span>
+            </a>
+          </div>
+        )}
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
           <Link
@@ -371,6 +429,7 @@ export default function ReportPage() {
                   </label>
                   <input
                     type="text"
+                    required
                     value={area}
                     onChange={(e) => setArea(e.target.value)}
                     placeholder="e.g. Mira Road Sector 10"
@@ -447,13 +506,13 @@ export default function ReportPage() {
             </div>
           )}
 
-          {/* STEP 3: DETAILS */}
+          {/* STEP 3: DETAILS & REPORTER CONTACT (PHONE MANDATORY) */}
           {step === 3 && (
             <div className="space-y-6">
               <div>
                 <h3 className="text-lg font-bold text-slate-900">Step 3: Issue Details & Reporter Info</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  Describe what you observed to help engineers diagnose the fault.
+                  Describe what you observed. Phone number is compulsory so the complaint ID & tracking link can be sent to your WhatsApp.
                 </p>
               </div>
 
@@ -474,7 +533,7 @@ export default function ReportPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Your Name (Optional)
+                      Your Name
                     </label>
                     <input
                       type="text"
@@ -486,15 +545,28 @@ export default function ReportPage() {
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Contact Phone (Optional)
+                      Contact Phone Number (Required for WhatsApp Updates) <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
-                      value={citizenPhone}
-                      onChange={(e) => setCitizenPhone(e.target.value)}
-                      placeholder="e.g. +91 98765 43210"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-hidden"
-                    />
+                    <div className="relative">
+                      <input
+                        type="tel"
+                        required
+                        value={citizenPhone}
+                        onChange={(e) => {
+                          setCitizenPhone(e.target.value);
+                          if (e.target.value.trim()) setPhoneError('');
+                        }}
+                        placeholder="e.g. 9876543210"
+                        className={`w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-blue-500 focus:outline-hidden ${
+                          phoneError ? 'border-red-500 bg-red-50/50' : 'border-slate-300'
+                        }`}
+                      />
+                    </div>
+                    {phoneError && (
+                      <p className="text-[11px] text-red-600 font-bold mt-1">
+                        ⚠️ {phoneError}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -510,7 +582,7 @@ export default function ReportPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setStep(4)}
+                  onClick={handleNextFromStep3}
                   className="inline-flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold text-xs hover:bg-blue-500"
                 >
                   <span>Next: Upload Photo</span>
@@ -657,7 +729,7 @@ export default function ReportPage() {
               <div>
                 <h3 className="text-lg font-bold text-slate-900">Step 6: Review & Finalize Submission</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  Please review your report information carefully before logging it into UrjaSetu.
+                  Please review your report details before logging. Upon submission, the Complaint ID and tracking URL will be automatically sent to your WhatsApp number.
                 </p>
               </div>
 
@@ -695,13 +767,13 @@ export default function ReportPage() {
                   </div>
                   <div>
                     <strong className="text-slate-500 uppercase tracking-wider block font-bold text-[10px]">
-                      Reported By
+                      Reported By & WhatsApp Phone
                     </strong>
                     <span className="text-slate-900 font-semibold block mt-0.5">
-                      {citizenName || 'Anonymous Citizen'}
+                      {citizenName || 'Citizen'}
                     </span>
-                    <span className="text-slate-500 font-mono text-[11px]">
-                      {citizenPhone || 'No phone provided'}
+                    <span className="text-emerald-700 font-mono text-[11px] font-bold">
+                      📱 WhatsApp: {citizenPhone}
                     </span>
                   </div>
                 </div>
@@ -729,6 +801,12 @@ export default function ReportPage() {
                 )}
               </div>
 
+              {phoneError && (
+                <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-bold rounded-xl">
+                  ⚠️ {phoneError}
+                </div>
+              )}
+
               <div className="flex justify-between pt-4 border-t border-slate-100">
                 <button
                   type="button"
@@ -745,7 +823,7 @@ export default function ReportPage() {
                   className="inline-flex items-center gap-2 px-8 py-3 bg-blue-600 text-white rounded-xl font-extrabold text-sm hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/30 cursor-pointer"
                 >
                   <Zap className="w-4 h-4 fill-white" />
-                  <span>Submit Complaint Now</span>
+                  <span>Submit & Dispatch WhatsApp Message</span>
                 </button>
               </div>
             </div>

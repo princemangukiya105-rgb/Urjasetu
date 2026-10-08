@@ -15,7 +15,6 @@ export const metadata: Metadata = {
     'Urban Energy Infrastructure',
     'Streetlight Issue Reporting',
     'Smart City Coordination',
-    'Idea Lab Prototype',
   ],
 };
 
@@ -27,16 +26,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.className} flex flex-col min-h-screen bg-slate-50 text-slate-900`}>
-        {/* Prototype Header Banner */}
-        <div className="bg-slate-900 text-slate-300 text-[11px] font-medium py-1.5 px-4 text-center border-b border-slate-800 flex items-center justify-center gap-2">
-          <span className="bg-blue-600 text-white font-bold text-[9px] px-1.5 py-0.5 rounded-sm uppercase tracking-wider">
-            Idea Lab Prototype
-          </span>
-          <span>
-            Urban Resource Coordination System • Energy & Electrical Infrastructure Focus
-          </span>
-        </div>
-
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

@@ -8,7 +8,7 @@ export default function AdminSettingsPage() {
   const [resetDone, setResetDone] = useState(false);
 
   const handleReset = () => {
-    if (confirm('Are you sure you want to reset all complaints and notifications to default initial demo data?')) {
+    if (confirm('Are you sure you want to clear system storage and reset application state?')) {
       resetDemoData();
       setResetDone(true);
       setTimeout(() => setResetDone(false), 3000);
@@ -22,11 +22,11 @@ export default function AdminSettingsPage() {
           System Administration Settings
         </h1>
         <p className="text-xs text-slate-500 mt-1">
-          Manage local prototype storage persistence, demo data state, and control preferences.
+          Manage system storage persistence and control preferences.
         </p>
       </div>
 
-      {/* Demo Reset Card */}
+      {/* Reset Card */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 md:p-8 space-y-6">
         <div className="flex items-start gap-4">
           <div className="p-3 bg-amber-50 text-amber-600 rounded-xl">
@@ -34,10 +34,10 @@ export default function AdminSettingsPage() {
           </div>
           <div className="space-y-1 flex-1">
             <h3 className="font-bold text-base text-slate-900">
-              Reset Demo System State
+              Clear System Storage State
             </h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Clears any newly added user complaints, notifications, or status changes stored in browser localStorage and restores original pre-populated sample dataset (10 complaints across Mira-Bhayandar wards).
+              Clears user complaints, notifications, or status changes stored in browser localStorage and resets the storage data.
             </p>
           </div>
         </div>
@@ -45,7 +45,7 @@ export default function AdminSettingsPage() {
         {resetDone && (
           <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold rounded-xl flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span>Demo Data reset successfully! All default complaints restored.</span>
+            <span>Storage reset successfully!</span>
           </div>
         )}
 
@@ -55,7 +55,7 @@ export default function AdminSettingsPage() {
             className="inline-flex items-center gap-2 px-6 py-2.5 bg-amber-600 text-white rounded-xl font-bold text-xs hover:bg-amber-500 transition-colors shadow-md shadow-amber-600/20"
           >
             <RefreshCw className="w-4 h-4" />
-            <span>Reset Demo Data Now</span>
+            <span>Clear Storage Now</span>
           </button>
         </div>
       </div>
@@ -78,11 +78,11 @@ export default function AdminSettingsPage() {
           </div>
           <div className="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
             <span className="text-slate-400 block text-[10px]">Deployment Target</span>
-            <strong className="text-white font-mono">Vercel Ready / Zero External Database</strong>
+            <strong className="text-white font-mono">Vercel Ready / Standalone Web Application</strong>
           </div>
           <div className="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
             <span className="text-slate-400 block text-[10px]">Project Category</span>
-            <strong className="text-white font-mono">College Idea Lab Academic Prototype</strong>
+            <strong className="text-white font-mono">Urban Infrastructure Management System</strong>
           </div>
         </div>
       </div>

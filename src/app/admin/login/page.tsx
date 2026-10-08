@@ -3,28 +3,27 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Zap, Shield, Lock, Mail, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Shield, Lock, Mail, Eye, EyeOff } from 'lucide-react';
 import { setAdminSession } from '@/lib/storage';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('admin@urjasetu.demo');
+  const [email, setEmail] = useState('admin@urjasetu.com');
   const [password, setPassword] = useState('Admin@123');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email === 'admin@urjasetu.demo' && password === 'Admin@123') {
+    if (
+      (email === 'admin@urjasetu.com' || email === 'admin@urjasetu.demo') &&
+      password === 'Admin@123'
+    ) {
       setAdminSession(true);
       router.push('/admin');
     } else {
-      setError('Invalid admin credentials. Use demo credentials shown below.');
+      setError('Invalid administrator email or password.');
     }
-  };
-
-  const handleQuickDemoLogin = () => {
-    setAdminSession(true);
-    router.push('/admin');
   };
 
   return (
@@ -37,11 +36,6 @@ export default function AdminLoginPage() {
           </div>
           <h1 className="text-xl font-bold tracking-tight">UrjaSetu Administration</h1>
           <p className="text-xs text-slate-400">Urban Energy Control & Field Maintenance Desk</p>
-
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-950/80 border border-amber-700/60 text-amber-300 text-[10px] font-bold">
-            <Zap className="w-3 h-3 text-amber-400" />
-            <span>Prototype / Demo Authentication</span>
-          </div>
         </div>
 
         {/* Login Form */}
@@ -58,6 +52,7 @@ export default function AdminLoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  placeholder="admin@urjasetu.com"
                   className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-hidden"
                 />
               </div>
@@ -70,12 +65,25 @@ export default function AdminLoginPage() {
               <div className="relative">
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-hidden"
+                  placeholder="••••••••"
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-300 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-hidden"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4 text-blue-600" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
               </div>
             </div>
 
@@ -93,30 +101,10 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          {/* Quick Demo Login Preset Button */}
-          <div className="pt-4 border-t border-slate-100 space-y-3">
-            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs space-y-1 text-slate-600">
-              <strong className="text-slate-900 block font-bold text-[11px]">
-                Demo Credentials:
-              </strong>
-              <div className="font-mono text-[11px]">Email: admin@urjasetu.demo</div>
-              <div className="font-mono text-[11px]">Password: Admin@123</div>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleQuickDemoLogin}
-              className="w-full py-2.5 bg-slate-900 text-white rounded-xl font-bold text-xs hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
-            >
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              <span>One-Click Demo Admin Login</span>
-            </button>
-
-            <div className="text-center pt-2">
-              <Link href="/" className="text-xs text-slate-500 hover:text-slate-900 font-medium">
-                &larr; Back to Public Landing Page
-              </Link>
-            </div>
+          <div className="pt-4 border-t border-slate-100 text-center">
+            <Link href="/" className="text-xs text-slate-500 hover:text-slate-900 font-medium">
+              &larr; Back to Public Landing Page
+            </Link>
           </div>
         </div>
       </div>

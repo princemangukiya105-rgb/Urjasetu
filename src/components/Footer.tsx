@@ -24,7 +24,7 @@ export const Footer: React.FC = () => {
 
             <div className="inline-flex items-center gap-2 bg-slate-800/80 border border-slate-700/60 px-3 py-1.5 rounded-lg text-xs text-slate-300">
               <Award className="w-4 h-4 text-blue-400 shrink-0" />
-              <span>Prototype developed for academic / Idea Lab demonstration.</span>
+              <span>Official Public Infrastructure Management Platform</span>
             </div>
           </div>
 
@@ -79,7 +79,7 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <span className="text-slate-500 font-mono">Demo Admin: admin@urjasetu.demo</span>
+                <span className="text-slate-500 font-mono">Admin: admin@urjasetu.com</span>
               </li>
             </ul>
 
@@ -92,7 +92,7 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© {new Date().getFullYear()} UrjaSetu Prototype. Academic Idea Lab Demonstration.</p>
+          <p>© {new Date().getFullYear()} UrjaSetu. Smart Urban Energy Infrastructure Platform.</p>
           <div className="flex items-center gap-4">
             <span className="bg-slate-800 px-2 py-1 rounded-sm text-[10px] text-slate-400 font-mono">
               Vercel Ready • LocalStorage Driven

@@ -110,7 +110,7 @@ export default function AdminOverviewDashboard() {
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-bold">Urban Energy Control Dashboard</h1>
             <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider">
-              Prototype Data
+              Live System
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-0.5">

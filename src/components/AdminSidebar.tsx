@@ -29,15 +29,15 @@ export const AdminSidebar: React.FC = () => {
   };
 
   const handleResetData = () => {
-    if (confirm('Reset all demo complaints and restore default initial state?')) {
+    if (confirm('Clear local system storage and reset application state?')) {
       resetDemoData();
-      alert('Demo data has been successfully reset!');
+      alert('System data has been successfully reset!');
     }
   };
 
   const menuItems = [
     { href: '/admin', label: 'Overview', icon: <LayoutDashboard className="w-4 h-4" /> },
-    { href: '/admin/complaints', label: 'Complaints Management', icon: <FileText className="w-4 h-4" /> },
+    { href: '/admin/complaints', label: 'Complaints Management', icon: <FileText className="w-4 h-4 text-xs font-semibold" /> },
     { href: '/admin/map', label: 'GIS Map View', icon: <MapPin className="w-4 h-4" /> },
     { href: '/admin/teams', label: 'Maintenance Teams', icon: <Users className="w-4 h-4" /> },
     { href: '/admin/analytics', label: 'Analytics & Reports', icon: <BarChart3 className="w-4 h-4" /> },
@@ -60,14 +60,6 @@ export const AdminSidebar: React.FC = () => {
             </span>
           </div>
         </Link>
-      </div>
-
-      {/* Demo Banner */}
-      <div className="mx-3 mt-3 p-2 bg-amber-950/60 border border-amber-800/60 rounded-lg text-center">
-        <div className="flex items-center justify-center gap-1.5 text-amber-300 font-bold text-[11px]">
-          <Shield className="w-3.5 h-3.5" />
-          <span>Prototype / Demo System</span>
-        </div>
       </div>
 
       {/* Nav Menu */}
@@ -111,7 +103,7 @@ export const AdminSidebar: React.FC = () => {
           className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-amber-400 hover:bg-amber-950/40 transition-colors text-left"
         >
           <RefreshCw className="w-4 h-4" />
-          <span>Reset Demo Data</span>
+          <span>Clear System Storage</span>
         </button>
       </nav>
 
@@ -127,7 +119,7 @@ export const AdminSidebar: React.FC = () => {
                 Urban Energy Admin
               </span>
               <span className="block text-[10px] text-slate-400 truncate">
-                admin@urjasetu.demo
+                admin@urjasetu.com
               </span>
             </div>
           </div>

@@ -53,7 +53,7 @@ export default function LandingPage() {
           <div className="text-center max-w-3xl mx-auto space-y-6">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/30 text-blue-300 text-xs font-semibold backdrop-blur-md">
               <Zap className="w-3.5 h-3.5 fill-blue-400" />
-              <span>Academic Idea Lab Prototype • Urban Energy Infrastructure</span>
+              <span>Urban Energy Infrastructure Platform</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
@@ -154,7 +154,7 @@ export default function LandingPage() {
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1 block">
               Issues Reported
             </span>
-            <span className="text-[10px] text-blue-600 font-medium">Demo Prototype Data</span>
+            <span className="text-[10px] text-blue-600 font-medium">Live System Data</span>
           </div>
 
           <div className="border-r border-slate-100 last:border-0 pr-4">

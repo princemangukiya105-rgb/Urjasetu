@@ -69,7 +69,7 @@ export default function HowItWorksPage() {
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto space-y-3">
         <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
-          Academic Concept & Workflow
+          Platform Concept & Workflow
         </span>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
           How UrjaSetu Works

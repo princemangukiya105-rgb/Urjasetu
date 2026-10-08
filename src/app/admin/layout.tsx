@@ -61,9 +61,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 border border-amber-200 text-amber-900 text-[10px] font-bold rounded-md">
-              <Zap className="w-3 h-3 text-amber-600" />
-              Prototype System Mode
+            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-emerald-900 text-[10px] font-bold rounded-md">
+              <Zap className="w-3 h-3 text-emerald-600" />
+              Official System Active
             </span>
 
             <Link

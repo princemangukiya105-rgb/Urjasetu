@@ -22,17 +22,18 @@ export default function TrackSearchPage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!searchId.trim()) return;
-
     const query = searchId.trim();
-    const found = recentComplaints.find(
+    if (!query) return;
+
+    const allComplaints = getComplaints();
+    const found = allComplaints.find(
       (c) => c.id.toLowerCase() === query.toLowerCase()
     );
 
     if (found) {
       router.push(`/track/${found.id}`);
     } else {
-      setErrorMsg(`No complaint found matching ID: "${query}". Please check the ID or pick from demo list below.`);
+      router.push(`/track/${encodeURIComponent(query)}`);
     }
   };
 
@@ -67,7 +68,7 @@ export default function TrackSearchPage() {
                   setSearchId(e.target.value);
                   setErrorMsg('');
                 }}
-                placeholder="e.g. URJ-2026-00124 or URJ-2026-00101"
+                placeholder="e.g. URJ-2026-00124"
                 className="w-full pl-11 pr-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-sm font-mono text-white placeholder-slate-500 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -88,12 +89,12 @@ export default function TrackSearchPage() {
         )}
       </div>
 
-      {/* Demo Complaints Quick Selector */}
+      {/* Complaints Quick Selector */}
       <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
             <Activity className="w-4 h-4 text-blue-600" />
-            <span>Select Demo Complaints to Inspect</span>
+            <span>Select Complaints to Inspect</span>
           </h3>
           <span className="text-xs text-slate-400">Click any row to track</span>
         </div>

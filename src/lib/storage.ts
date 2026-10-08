@@ -22,7 +22,25 @@ export const getComplaints = (): Complaint[] => {
       localStorage.setItem(STORAGE_KEYS.COMPLAINTS, JSON.stringify(INITIAL_COMPLAINTS));
       return INITIAL_COMPLAINTS;
     }
-    return JSON.parse(data);
+    const parsed: Complaint[] = JSON.parse(data);
+    // Remove legacy fake mock complaints if present from earlier demo runs
+    const cleaned = parsed.filter(
+      (c) =>
+        c.reportedBy?.email !== 'aarav.m@example.com' &&
+        c.reportedBy?.email !== 'priya.s@example.com' &&
+        c.reportedBy?.email !== 'rohan.g@example.com' &&
+        c.reportedBy?.email !== 'sunita.d@example.com' &&
+        c.reportedBy?.email !== 'vikram.t@example.com' &&
+        c.reportedBy?.email !== 'kavita.i@example.com' &&
+        c.reportedBy?.email !== 'siddharth.r@example.com' &&
+        c.reportedBy?.email !== 'nikhil.s@example.com' &&
+        c.reportedBy?.email !== 'ananya.r@example.com' &&
+        c.reportedBy?.email !== 'manish.p@example.com'
+    );
+    if (cleaned.length !== parsed.length) {
+      localStorage.setItem(STORAGE_KEYS.COMPLAINTS, JSON.stringify(cleaned));
+    }
+    return cleaned;
   } catch {
     return INITIAL_COMPLAINTS;
   }
@@ -42,7 +60,6 @@ export const saveComplaints = (complaints: Complaint[]): void => {
     notifyListeners();
   } catch (error) {
     console.warn('localStorage save warning (quota or restricted):', error);
-    // If quota exceeded due to heavy base64 image data, strip image strings from older complaints and retry
     try {
       const sanitized = complaints.map((c, idx) => {
         if (idx > 0 && c.image && c.image.length > 5000) {
@@ -53,7 +70,6 @@ export const saveComplaints = (complaints: Complaint[]): void => {
       localStorage.setItem(STORAGE_KEYS.COMPLAINTS, JSON.stringify(sanitized));
       notifyListeners();
     } catch {
-      // Fallback: notify listeners anyway so local React state stays active
       notifyListeners();
     }
   }
@@ -66,8 +82,8 @@ export type NewComplaintInput = Omit<Complaint, 'id' | 'reportedDate' | 'lastUpd
 export const addComplaint = (newComplaint: NewComplaintInput): Complaint => {
   const complaints = getComplaints();
   const year = new Date().getFullYear();
-  const indexNumber = (complaints.length + 101).toString().padStart(5, '0');
-  const id = `URJ-${year}-${indexNumber}`;
+  const randomNum = Math.floor(10000 + Math.random() * 90000);
+  const id = `URJ-${year}-${randomNum}`;
   const now = new Date().toISOString();
 
   const initialTimeline: TimelineItem = {
@@ -306,7 +322,12 @@ export const getNotifications = (): NotificationItem[] => {
       localStorage.setItem(STORAGE_KEYS.NOTIFICATIONS, JSON.stringify(INITIAL_NOTIFICATIONS));
       return INITIAL_NOTIFICATIONS;
     }
-    return JSON.parse(data);
+    const parsed: NotificationItem[] = JSON.parse(data);
+    const cleaned = parsed.filter((n) => !['notif-1', 'notif-2', 'notif-3'].includes(n.id));
+    if (cleaned.length !== parsed.length) {
+      localStorage.setItem(STORAGE_KEYS.NOTIFICATIONS, JSON.stringify(cleaned));
+    }
+    return cleaned;
   } catch {
     return INITIAL_NOTIFICATIONS;
   }
